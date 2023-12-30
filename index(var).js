@@ -1,0 +1,2 @@
+var OEConfWECounter = {"WE6ee1eaffc3":{"ScriptVersion":22,"Config":{"TypeCounter":0,"InitialValue":0,"Lenght":9,"CountMethod":0}}}
+var OEConfWEVideo = {"WEb6bcd339b7":{"ExportValues":"Flash player will function after <b>site is PUBLISHED</b><br />(<b><u>local videos</u></b> do not load in Flash)##ERROR: NO SUPPORTED VIDEO","Links":[{"Target":null,"Links":{"Items":{"DEFAULT":"Files/Video/Windows 10 fake bootscreen(edited).mp4"}}},null,null]}}
