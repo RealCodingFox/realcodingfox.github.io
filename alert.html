@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Alert and Close</title>
+  <script>
+    window.onload = () => {
+      const params = new URLSearchParams(window.location.search);
+      const textValue = params.get('text');
+
+      if (textValue) {
+        alert(textValue);
+      } else {
+        alert("No text parameter provided!");
+      }
+
+      // Attempt to close the window after the alert.
+      // Note: window.close() only works if the page was opened via JavaScript (like using window.open()).
+      window.close();
+    };
+  </script>
+</head>
+<body>
+</body>
+</html>
