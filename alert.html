@@ -5,19 +5,23 @@
   <title>Alert and Close</title>
   <script>
     window.onload = () => {
-      const params = new URLSearchParams(window.location.search);
-      const textValue = params.get('text');
+  const params = new URLSearchParams(window.location.search);
+  const textValue = params.get('text');
 
-      if (textValue) {
-        alert(textValue);
-      } else {
-        alert("No text parameter provided!");
-      }
+  if (textValue) {
+    alert(textValue);
+  } else {
+    alert("No text parameter provided!");
+  }
 
-      // Attempt to close the window after the alert.
-      // Note: window.close() only works if the page was opened via JavaScript (like using window.open()).
-      window.close();
-    };
+  // Redirect back to the previous page
+  if (document.referrer) {
+    window.location.href = document.referrer;
+  } else {
+    alert("No previous page found!");
+  }
+};
+
   </script>
 </head>
 <body>
