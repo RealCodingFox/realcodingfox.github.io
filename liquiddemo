@@ -1,0 +1,217 @@
+style>
+    .liquid-glass {
+  background: linear-gradient(
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.1)
+  ); /* soft light gradient */
+
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+
+  border-radius: 12px;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3),
+              0 8px 24px rgba(0, 0, 0, 0.35); /* polished depth */
+
+  padding: 1rem;
+  padding-top: 1rem;
+  margin: 2rem auto;
+  width: fit-content;
+  color: #fff;
+  transition: background 0.3s ease;
+
+  border-collapse: separate;      /* Allows spacing between cells */
+  border-spacing: 14px;
+}
+
+.liquid-cell {
+  background: linear-gradient(
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.1)
+  ); /* soft light gradient */
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+
+  border-radius: 10px;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3),
+              0 8px 24px rgba(0, 0, 0, 0.35); /* polished depth */
+  padding: 0.5rem;
+  margin: 2rem auto;
+  width: fit-content;
+  color: #fff;
+  transition: background 0.3s ease;
+  border-collapse: separate;
+  border-spacing: 1rem;
+}
+
+.timezone-flex {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0 auto;
+  width: fit-content;
+  text-align: center;
+}
+
+.row {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.liquid-box {
+  background: linear-gradient(rgba(255,255,255,0.08), rgba(255,255,255,0.16));
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  padding: 0.8rem 1.2rem;
+  color: #fff;
+  min-width: 120px;
+  transition: all 0.3s ease;
+}
+
+.liquid-box:hover {
+  transform: scale(1.03);
+  background: rgba(255,255,255,0.22);
+}
+
+.grid-table {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0 auto;
+  width: fit-content;
+}
+
+.grid-row {
+  display: grid;
+  grid-template-columns: repeat(5, auto);
+  gap: 12px;
+  justify-content: center;
+}
+
+.liquid-box {
+  background: linear-gradient(rgba(255,255,255,0.08), rgba(255,255,255,0.15));
+  backdrop-filter: blur(14px) saturate(180%);
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  padding: 0.7rem 1rem;
+  color: #fff;
+  text-align: center;
+  font-family: 'Cantarell', sans-serif;
+}
+
+.liquid-box.fullscreen {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.liquid-box-static {
+  background: linear-gradient(rgba(255,255,255,0.08), rgba(255,255,255,0.15));
+  backdrop-filter: blur(14px) saturate(180%);
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  padding: 0.7rem 1rem;
+  color: #fff;
+  text-align: center;
+  font-family: 'Cantarell', sans-serif;
+  min-width: 120px;
+}
+
+.liquid-box-static.fullscreen {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+
+.liquid-box-invisible {
+  border-radius: 10px;
+  padding: 0.7rem 1rem;
+  color: #fff;
+  text-align: center;
+  font-family: 'Cantarell', sans-serif;
+  min-width: 120px;
+}
+
+.download-button {
+  display: inline-block;
+  font-weight: bold;
+  font-size: 16pt;
+  padding: 0.5rem 1rem;
+  margin: 1rem;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.1));
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  width: fit-content;    /* 👈 key to match text width */
+  margin: 0 auto;        /* centers it horizontally */
+}
+
+
+.download-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.03);
+}
+
+.blur-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4); /* semi-transparent */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+}
+.blur-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.center-wrapper {
+  display: flex;
+  justify-content: center; /* horizontal */
+  align-items: center;     /* vertical */
+  height: 100vh;           /* full viewport height */
+}
+
+@keyframes scaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.center-wrapper .liquid-box-static {
+  animation: scaleIn 0.4s ease-out;
+}
+
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  min-width: 100%;
+}
+
+body {
+  background-image: url('Nebula3.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+</style>
