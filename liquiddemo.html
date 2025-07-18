@@ -1,4 +1,11 @@
-style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Liquid Glass</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cantarell&display=swap" rel="stylesheet" />
+  <style>
     .liquid-glass {
   background: linear-gradient(
     rgba(255, 255, 255, 0.05),
@@ -208,10 +215,74 @@ html, body {
 }
 
 body {
-  background-image: url('Nebula3.jpg');
+  background-image: url('Nebula2.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
 }
 
 </style>
+</head>
+<body>
+
+  <!-- 🌌 Centered Intro Section -->
+  <div class="center-wrapper">
+    <div class="liquid-box-static">
+      <h2>💧 Liquid Glass Interface</h2>
+      <p>Showcasing blur, depth, gradients, and interactive components.</p>
+      <button class="download-button" onclick="toggleOverlay()">Open Modal</button>
+    </div>
+  </div>
+
+  <!-- 🧮 Controls & Forms Section -->
+  <div class="timezone-flex">
+    <div class="row">
+      <div class="liquid-box">
+        <label for="username">Username:</label><br />
+        <input type="text" id="username" class="liquid-cell" placeholder="Type here..." />
+      </div>
+      <div class="liquid-box">
+        <label for="theme">Theme:</label><br />
+        <select id="theme" class="liquid-cell">
+          <option>Glass</option>
+          <option>Aero</option>
+          <option>Cosmic</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="liquid-box">
+        <button class="download-button">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🧊 Grid of Liquid Boxes -->
+  <div class="grid-table">
+    <div class="grid-row">
+      <div class="liquid-box">✨ Widget A</div>
+      <div class="liquid-box">🚀 Widget B</div>
+      <div class="liquid-box">🌙 Widget C</div>
+      <div class="liquid-box">🎨 Widget D</div>
+      <div class="liquid-box">📦 Widget E</div>
+    </div>
+  </div>
+
+  <!-- 🔍 Blur Modal Overlay -->
+  <div id="overlay" class="blur-overlay" onclick="toggleOverlay()">
+    <div class="center-wrapper">
+      <div class="liquid-box-static fullscreen">
+        <h3>🔮 Liquid Modal</h3>
+        <p>Beautiful depth and saturation... with just a touch of cosmic elegance.</p>
+        <button class="download-button" onclick="toggleOverlay()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleOverlay() {
+      document.getElementById("overlay").classList.toggle("active");
+    }
+  </script>
+</body>
+</html>
