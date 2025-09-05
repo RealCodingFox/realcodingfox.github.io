@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Unredundant</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('https://images.unsplash.com/photo-1549924231-f129b911e442') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .glass-panel {
+      width: 400px;
+      margin: 60px auto;
+      padding: 30px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+      color: #fff;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 300;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-size: 0.9em;
+    }
+
+    .file-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 5px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      background: rgba(0, 150, 255, 0.3);
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: rgba(0, 150, 255, 0.6);
+    }
+
+    .genesis-btn {
+      width: 100%;
+      margin-top: 20px;
+      font-weight: bold;
+      background: rgba(0, 255, 150, 0.3);
+    }
+
+    #logArea {
+      width: 100%;
+      height: 120px;
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.3);
+      color: #0f0;
+      font-family: monospace;
+      resize: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="glass-panel">
+    <h1>Unredundant</h1>
+
+    <label>Input File</label>
+    <div class="file-row">
+      <input type="text" id="inputPath" readonly />
+      <button onclick="browseInput()">Browse</button>
+    </div>
+
+    <label>Output File</label>
+    <div class="file-row">
+      <input type="text" id="outputPath" readonly />
+      <button onclick="browseOutput()">Save As</button>
+    </div>
+
+    <button class="genesis-btn" onclick="startGenesis()">Genesis</button>
+
+    <textarea id="logArea" readonly></textarea>
+  </div>
+
+  <script>
+    function browseInput() {
+      const fakePath = "/home/codingfox/Documents/input.docx";
+      document.getElementById("inputPath").value = fakePath;
+      log(`Selected input: ${fakePath}`);
+    }
+
+    function browseOutput() {
+      const fakePath = "/home/codingfox/Documents/output.docx";
+      document.getElementById("outputPath").value = fakePath;
+      log(`Selected output: ${fakePath}`);
+    }
+
+    function startGenesis() {
+      const input = document.getElementById("inputPath").value;
+      const output = document.getElementById("outputPath").value;
+
+      if (!input || !output) {
+        log("Missing input or output path. Exodus.");
+        return;
+      }
+
+      log("Genesis.");
+      log(`Begin read ${input}.`);
+      log("Successful read.");
+      log("Start look sections.");
+      log("Highlight → \"section one\" (duplicate detected)");
+      log("Unique → \"section two\" (first appearance)");
+      log("Do parse section correct.");
+      log("Begin save redundancies.");
+      log(`Success save to ${output}.`);
+      log("Exodus.");
+    }
+
+    function log(message) {
+      const logArea = document.getElementById("logArea");
+      logArea.value += message + "\n";
+      logArea.scrollTop = logArea.scrollHeight;
+    }
+  </script>
+</body>
+</html>
