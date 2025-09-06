@@ -7,143 +7,212 @@
     body {
       margin: 0;
       padding: 0;
-      background: url('https://images.unsplash.com/photo-1549924231-f129b911e442') no-repeat center center fixed;
+      background: url('Moon.jpg') no-repeat center center fixed;
       background-size: cover;
       font-family: 'Segoe UI', sans-serif;
-    }
-
-    .glass-panel {
-      width: 400px;
-      margin: 60px auto;
-      padding: 30px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
       color: #fff;
     }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-weight: 300;
+    .glass-container {
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 5vh auto;
+      width: 80%;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.4);
     }
-
-    label {
-      display: block;
-      margin-top: 15px;
-      font-size: 0.9em;
-    }
-
-    .file-row {
-      display: flex;
-      gap: 10px;
-      margin-top: 5px;
-    }
-
-    input[type="text"] {
-      flex: 1;
-      padding: 8px;
+    input[type="file"], button {
+      margin-bottom: 1rem;
+      padding: 0.5rem 1rem;
       border: none;
       border-radius: 8px;
       background: rgba(255, 255, 255, 0.2);
-      color: #fff;
-    }
-
-    button {
-      padding: 8px 12px;
-      border: none;
-      border-radius: 8px;
-      background: rgba(0, 150, 255, 0.3);
-      color: #fff;
+      color: white;
       cursor: pointer;
-      transition: background 0.3s ease;
     }
-
-    button:hover {
-      background: rgba(0, 150, 255, 0.6);
-    }
-
-    .genesis-btn {
+    progress {
       width: 100%;
-      margin-top: 20px;
-      font-weight: bold;
-      background: rgba(0, 255, 150, 0.3);
+      height: 20px;
+      margin-bottom: 1rem;
     }
-
-    #logArea {
-      width: 100%;
-      height: 120px;
-      margin-top: 20px;
-      padding: 10px;
-      border-radius: 8px;
+    .log-box {
       background: rgba(0, 0, 0, 0.3);
-      color: #0f0;
-      font-family: monospace;
-      resize: none;
+      padding: 1rem;
+      border-radius: 8px;
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
     }
   </style>
 </head>
 <body>
-  <div class="glass-panel">
+  <div class="glass-container">
     <h1>Unredundant</h1>
-
-    <label>Input File</label>
-    <div class="file-row">
-      <input type="text" id="inputPath" readonly />
-      <button onclick="browseInput()">Browse</button>
-    </div>
-
-    <label>Output File</label>
-    <div class="file-row">
-      <input type="text" id="outputPath" readonly />
-      <button onclick="browseOutput()">Save As</button>
-    </div>
-
-    <button class="genesis-btn" onclick="startGenesis()">Genesis</button>
-
-    <textarea id="logArea" readonly></textarea>
+    <input type="file" id="docxInput" accept=".docx" />
+    <progress id="progressBar" value="0" max="100"></progress>
+    <div id="logOutput" class="log-box"></div>
+    <button id="downloadBtn">Download Corrected Doc</button>
   </div>
 
-  <script>
-    function browseInput() {
-      const fakePath = "/home/codingfox/Documents/input.docx";
-      document.getElementById("inputPath").value = fakePath;
-      log(`Selected input: ${fakePath}`);
-    }
+  <script type="module">
+  import * as docx from "https://unpkg.com/docx@8.1.0/build/index.js";
+  import JSZip from "https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm";
 
-    function browseOutput() {
-      const fakePath = "/home/codingfox/Documents/output.docx";
-      document.getElementById("outputPath").value = fakePath;
-      log(`Selected output: ${fakePath}`);
-    }
+  const logBox = document.getElementById('logOutput');
+  const progressBar = document.getElementById('progressBar');
+  const downloadBtn = document.getElementById('downloadBtn');
+  let correctedDoc;
 
-    function startGenesis() {
-      const input = document.getElementById("inputPath").value;
-      const output = document.getElementById("outputPath").value;
+  const log = (msg) => {
+    const div = document.createElement('div');
+    div.textContent = msg;
+    logBox.appendChild(div);
+    logBox.scrollTop = logBox.scrollHeight;
+  };
 
-      if (!input || !output) {
-        log("Missing input or output path. Exodus.");
-        return;
+  document.getElementById('docxInput').addEventListener('change', async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    log("Genesis.");
+    const zip = await JSZip.loadAsync(await file.arrayBuffer());
+    const xml = await zip.file("word/document.xml").async("string");
+
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(xml, "application/xml");
+
+    const used = new Set();
+    const children = [];
+    const body = xmlDoc.getElementsByTagName("w:body")[0];
+    const nodes = Array.from(body.childNodes);
+
+    nodes.forEach((node, index) => {
+      progressBar.value = Math.floor(((index + 1) / nodes.length) * 100);
+
+      if (node.nodeName === "w:p") {
+        const runs = [];
+        const texts = node.getElementsByTagName("w:r");
+
+        Array.from(texts).forEach(run => {
+          const textNode = run.getElementsByTagName("w:t")[0];
+          if (!textNode) return;
+
+          const text = textNode.textContent.trim();
+          const norm = text.toLowerCase().replace(/[^a-z0-9]/g, '');
+          const isRedundant = used.has(norm);
+          if (!isRedundant) {
+            used.add(norm);
+            log(`Fresh phrase: "${text}"`);
+          } else {
+            log(`Redundancy found: "${text}"`);
+          }
+
+          const props = run.getElementsByTagName("w:rPr")[0];
+          const isBold = props?.getElementsByTagName("w:b").length > 0;
+          const isItalic = props?.getElementsByTagName("w:i").length > 0;
+
+          runs.push(new docx.TextRun({
+            text: text + " ",
+            bold: isBold,
+            italics: isItalic,
+            highlight: isRedundant ? "yellow" : undefined
+          }));
+        });
+
+        if (runs.length > 0) {
+          children.push(new docx.Paragraph({ children: runs }));
+        }
       }
 
-      log("Genesis.");
-      log(`Begin read ${input}.`);
-      log("Successful read.");
-      log("Start look sections.");
-      log("Highlight → \"section one\" (duplicate detected)");
-      log("Unique → \"section two\" (first appearance)");
-      log("Do parse section correct.");
-      log("Begin save redundancies.");
-      log(`Success save to ${output}.`);
-      log("Exodus.");
-    }
+      if (node.nodeName === "w:tbl") {
+        const docxRows = [];
+        const rows = node.getElementsByTagName("w:tr");
 
-    function log(message) {
-      const logArea = document.getElementById("logArea");
-      logArea.value += message + "\n";
-      logArea.scrollTop = logArea.scrollHeight;
-    }
-  </script>
+        Array.from(rows).forEach(row => {
+          const docxCells = [];
+          const cells = row.getElementsByTagName("w:tc");
+
+          Array.from(cells).forEach(cell => {
+            const texts = cell.getElementsByTagName("w:t");
+            const full = Array.from(texts).map(t => t.textContent.trim()).join(" ");
+            const norm = full.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const isRedundant = used.has(norm);
+            if (!isRedundant) {
+              used.add(norm);
+              log(`Fresh cell: "${full}"`);
+            } else {
+              log(`Redundant cell: "${full}"`);
+            }
+
+            const cellRun = new docx.TextRun({
+              text: full,
+              highlight: isRedundant ? "yellow" : undefined
+            });
+
+            const tcPr = cell.getElementsByTagName("w:tcPr")[0];
+            let width = undefined;
+            let fill = undefined;
+
+            if (tcPr) {
+              const tcW = tcPr.getElementsByTagName("w:tcW")[0];
+              if (tcW) {
+                width = parseInt(tcW.getAttribute("w:w"));
+              }
+
+              const shd = tcPr.getElementsByTagName("w:shd")[0];
+              if (shd) {
+                fill = shd.getAttribute("w:fill");
+              }
+            }
+
+            const cellOptions = {
+              children: [new docx.Paragraph({ children: [cellRun] })]
+            };
+
+            if (width) {
+              cellOptions.width = {
+                size: width,
+                type: docx.WidthType.DXA
+              };
+            }
+
+            if (fill) {
+              cellOptions.shading = {
+                fill: fill
+              };
+            }
+
+            docxCells.push(new docx.TableCell(cellOptions));
+          });
+
+          docxRows.push(new docx.TableRow({ children: docxCells }));
+        });
+
+        children.push(new docx.Table({
+          rows: docxRows,
+          width: {
+            size: 10000,
+            type: docx.WidthType.DXA
+          }
+        }));
+      }
+    });
+
+    correctedDoc = new docx.Document({
+      sections: [{ children }]
+    });
+
+    log("Exodus.");
+  });
+
+  downloadBtn.addEventListener('click', async () => {
+    if (!correctedDoc) return;
+    const blob = await docx.Packer.toBlob(correctedDoc);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = "corrected.docx";
+    a.click();
+  });
+</script>
 </body>
 </html>
