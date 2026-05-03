@@ -2,26 +2,21 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Alert and Redirect</title>
+  <title>Sans titre</title>
   <script>
     window.onload = () => {
       const params = new URLSearchParams(window.location.search);
       const textValue = params.get('text');
-      const targetPage = params.get('target'); // Get redirect target
+      const targetPage = params.get('target');
+      document.title = params.get('title');
 
       if (textValue) {
         alert(textValue);
-      } else {
-        alert("No text parameter provided!");
       }
-
-      // Redirect based on target parameter or previous page
       if (targetPage) {
-        window.location.href = targetPage; // Redirect to the custom target
+        window.location.href = targetPage;
       } else if (document.referrer) {
-        window.location.href = document.referrer; // Redirect to the previous page
-      } else {
-        alert("No previous page or target specified!");
+        window.location.href = document.referrer;
       }
     };
   </script>
